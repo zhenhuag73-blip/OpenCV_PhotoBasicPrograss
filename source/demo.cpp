@@ -7,7 +7,7 @@
 using namespace std;
 using namespace cv;
 
-Mat input = imread("/home/branc/桌面/C++OpenCV/Input/ugly.jpg",IMREAD_UNCHANGED);
+Mat input = imread("/home/branc/Desktop/C++OpenCV/Input/object.jpg",IMREAD_UNCHANGED);
 
 
 /*
@@ -432,57 +432,51 @@ array输入的灰度图像与2D点集，输入的对象为向量vector<Point>或
                double epsillon          ————拟合精度
                bool closed);            ————whether closed?
 */
-int n2_6,
-    canny_threshold1_2_6;
-void onCannyThrhod2_6(int,void*){
-    canny_threshold1_2_6 = 4* (n2_6 + 1);
-}
 void QuickDemo::func2_6_toClose(Mat &image){
     namedWindow("result",WINDOW_FREERATIO);
-//#################################################################
-//  去噪声与二值化
+//  降噪&二值
     Mat canny;
-    Canny(image,canny,canny_threshold1_2_6,160,3,false);
+    Canny(image,canny,30,160,3,false);
     imshow("canny",canny);
-//  膨胀下
-    Mat kernel = getStructuringElement(0,Size(3,3));
-    dilate(canny,canny,kernel);
+
+    Mat kernel = getStructuringElement(0,Size(9,9));
+    Mat finally;
+    dilate(canny,finally,kernel);
 
     vector<vector<Point>> contours;
     vector<Vec4i> hieratchy;
-    findContours(canny,
+//  获得轮廓外接点
+    findContours(finally,
                  contours,
                  hieratchy,
                  0,
                  2,
                  Point());
-//  寻找外接矩形
     for(int i = 0;i < contours.size();++i){
             Rect rect = boundingRect(contours[i]);
             rectangle(image,rect,Scalar(0,255,0),3,8);
-        }        
+        }
     imshow("result",image);
     
-//#################################################################
     VideoCapture vd = VideoCapture(0);
     Mat frame, canny_video;
     namedWindow("VideoStream",WINDOW_FREERATIO);
     namedWindow("VideoStream1",WINDOW_FREERATIO);
 
-    createTrackbar("threshold1","VideoStream",&n2_6,100,onCannyThrhod2_6);
-    onCannyThrhod2_6(0,0);
-
     while(1){
-//#################################################################
 
-//#################################################################
         vd >> frame;
-        Canny(frame, canny_video,canny_threshold1_2_6,160,3,false);
+        Canny(frame, canny_video,80,160,3,false);
 
         imshow("VideoStream1",canny_video);
 
-        dilate(canny_video, canny_video, kernel);
-        findContours(canny_video, contours, hieratchy, 0, 2, Point());
+        dilate(canny_video,canny_video,kernel);
+        findContours(canny_video,
+                     contours,
+                     hieratchy,
+                     0,
+                     2,
+                     Point());
         for(int i = 0;i < contours.size();++i){
             Rect rect = boundingRect(contours[i]);
             rectangle(frame, rect, Scalar(0,0,255),1,8);
@@ -490,5 +484,6 @@ void QuickDemo::func2_6_toClose(Mat &image){
         imshow("VideoStream",frame);
         waitKey(27);
     }
-
+    waitKey(0);
+    destroyAllWindows();
 }
