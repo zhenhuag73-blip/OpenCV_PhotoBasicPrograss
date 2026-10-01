@@ -431,13 +431,28 @@ array输入的灰度图像与2D点集，输入的对象为向量vector<Point>或
                OutputArray approxCurve, ————逼近结果，以多边形顶点坐标形式给出
                double epsillon          ————拟合精度
                bool closed);            ————whether closed?
+#################################################################
 */
+void drawapp(Mat result,Mat image){
+    for(int i = 0;i < result.rows;++i){
+            if(i == result.rows -1){
+                Vec2i point1 = result.at<Vec2i>(i);
+                Vec2i point2 = result.at<Vec2i>(0);
+                line(image,point1,point2,Scalar(255,100,240),2);
+                break;
+            }
+            Vec2i point1 = result.at<Vec2i>(i);
+            Vec2i point2 = result.at<Vec2i>(i+1);
+            line(image,point1,point2,Scalar(255,100,240),2);
+    }
+}
+
 void QuickDemo::func2_6_toClose(Mat &image){
-    namedWindow("result",WINDOW_FREERATIO);
-//  降噪&二值
+
+    namedWindow("max",WINDOW_FREERATIO);
     Mat canny;
-    Canny(image,canny,30,160,3,false);
-    imshow("canny",canny);
+    Canny(image,canny,80,160,3,false);
+//  imshow("canny",canny);
 
     Mat kernel = getStructuringElement(0,Size(9,9));
     Mat finally;
@@ -445,6 +460,7 @@ void QuickDemo::func2_6_toClose(Mat &image){
 
     vector<vector<Point>> contours;
     vector<Vec4i> hieratchy;
+
 //  获得轮廓外接点
     findContours(finally,
                  contours,
@@ -456,7 +472,61 @@ void QuickDemo::func2_6_toClose(Mat &image){
             Rect rect = boundingRect(contours[i]);
             rectangle(image,rect,Scalar(0,255,0),3,8);
         }
-    imshow("result",image);
+    imshow("max",image);
+
+    namedWindow("min",WINDOW_FREERATIO);    
+    for(int i = 0;i < contours.size();++i){
+            RotatedRect rrect = minAreaRect(contours[i]);
+            Point2f points[4];
+            rrect.points(points);       //获取四个顶点
+            Point2f centerPoint = rrect.center; //获取矩形中心点
+
+            for(int j = 0;j < 4;++j){
+                if(j == 3){
+                    line(image,points[j],points[0],Scalar(255,50,2),2,8,0);
+                    break;
+                }
+                line(image,points[j],points[j+1],Scalar(200,0,255),3,8,0);
+            }
+        //  化缘(阿弥陀佛🙏🙏🙏)
+            circle(image,centerPoint,10,Scalar(0,255,255),-1,8,0);
+    }
+    imshow("min",image);
+/*
+#################################################################
+🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️
+这个算法实在写不下去了，先不写了
+*/
+    namedWindow("Complex",WINDOW_FREERATIO);
+    vector<vector<Point>> contours_Complex;
+    vector<Vec4i> hieratchy_Complex;
+    findContours(canny,contours_Complex,hieratchy_Complex,0,2,Point());
+
+    for(int i = 0;i < contours_Complex.size();++i){
+        RotatedRect rrect = minAreaRect(contours_Complex[i]);
+        Point2f centerPoint = rrect.center;
+        circle(image,centerPoint,4,Scalar(0,255,255),-1,8,0);
+
+        Mat result;
+        approxPolyDP(contours_Complex[i],result,4,true);
+        drawapp(result,image);
+
+        if(result.rows == 3){
+            putText(image,"triangle",centerPoint,0,1,Scalar(0,0,255),1,8);
+        }
+        if(result.rows == 4){
+            putText(image,"rectangle",centerPoint,0,1,Scalar(0,0,255),1,8);
+        }
+        if(result.rows == 8){
+            putText(image,"Poly-8",centerPoint,0,1,Scalar(0,0,255),1,8);
+        }
+        if(result.rows > 12){//边数过于多时按照圆形来处处理  化缘🙏🙏🙏🙏🙏🙏
+            putText(image,"circle",centerPoint,0,1,Scalar(0,0,255),1,8);
+        }
+    }
+    imshow("Complex",image);
+//🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️
+//#################################################################
     
     VideoCapture vd = VideoCapture(0);
     Mat frame, canny_video;
@@ -468,7 +538,7 @@ void QuickDemo::func2_6_toClose(Mat &image){
         vd >> frame;
         Canny(frame, canny_video,80,160,3,false);
 
-        imshow("VideoStream1",canny_video);
+//      imshow("VideoStream1",canny_video);
 
         dilate(canny_video,canny_video,kernel);
         findContours(canny_video,
@@ -486,4 +556,254 @@ void QuickDemo::func2_6_toClose(Mat &image){
     }
     waitKey(0);
     destroyAllWindows();
+}
+
+
+/*
+边缘 直线，圆与矩形检测
+#################################################################
+边缘检测
+Sobel算子边缘检测
+Sobel(input,output,
+      ddepth,
+      dx,dy,
+      int ksize = 3,
+      double scale = 1,
+      double delta = 0,DEFAULT)
+
+Scharr算子边缘检测
+Scharr(input,output,
+       ddepth,
+       dx,dy,
+       double scale = 1,
+       double delta = 0,
+       borderType = DEFAULT)
+
+两种算子的生成
+getDerivKernels(outPutArray kx,
+                outPutArray ky,
+                dx,dy,
+                int ksize,)
+*/
+
+void QuickDemo::func2_7(Mat &image){
+    namedWindow("X",WINDOW_FREERATIO);
+    namedWindow("Y",WINDOW_FREERATIO);
+    namedWindow("XY",WINDOW_FREERATIO);
+    namedWindow("XY2",WINDOW_FREERATIO);
+
+    Mat resultX,resultY,resultXY;
+    Sobel(image,resultX,CV_16S,1,0,1);
+    convertScaleAbs(resultX,resultX);
+
+    Sobel(image,resultY,CV_16S,1,0,3);
+    convertScaleAbs(resultY,resultY);
+
+    resultXY = resultX + resultY;
+    imshow("X",resultX);
+    imshow("Y",resultY);
+    imshow("XY",resultXY);
+
+    add(resultX,resultY,resultXY);
+    imshow("XY2",resultXY);
+    waitKey(0);
+
+    Scharr(image,resultX,CV_16S,1,0);
+    Scharr(image,resultY,CV_16S,0,1);
+
+    resultXY = resultX + resultY;
+    imshow("X",resultX);
+    imshow("Y",resultY);
+    imshow("XY",resultXY);
+}
+/*
+堆屎山ing... 💩
+Laplacian算子
+Sobel & Scharr算法都是对X,Y单一方向计算梯度
+Laplacian算子可以忽略方向性,缺点容易受噪声影响
+Laplacian(input,output,
+          ddepth,
+          int ksize = 1,
+          double scale = 1,
+          double delta = 0,
+          borderType = DEFAULT);
+Canny算法
+Canny算法是对Sobel算法优化的算法，能够去除掉一些虚假的边缘
+Canny(input,
+      edges,                   // 输出图像与输入图像具有相同的大小，但是为单通道
+      double threshold1,       // 二值化第一个滞后阈值
+      double threshold2,       // 二值化第二个滞后阈值
+      int apertureSize = 3,    // sobel算子直径
+      bool L2gradient = false);// 计算图像梯度幅值的标志
+*/
+int n2_7pro,
+    kernel2_7Video,
+    ksize2_7;
+void onTrackGaussKernel2_7(int,void*){
+    kernel2_7Video = 2*n2_7pro + 1;
+}
+void onTrackLapsKsize2_7(int,void*){
+    ksize2_7 = ksize2_7 + 1;
+}
+
+void QuickDemo::func2_7_Pro(Mat &image){
+    Mat laps,lapsPro,canny;
+    Mat gauss;
+
+    namedWindow("Laplacian",WINDOW_FREERATIO);
+    namedWindow("LaplacianPro",WINDOW_FREERATIO);
+    namedWindow("Canny",WINDOW_FREERATIO);
+
+    Laplacian(image,laps,CV_16S,3,1,0);
+    convertScaleAbs(laps,laps);//拉普拉斯有可能会出现负数，因此取绝对值
+    imshow("Laplacian",laps);
+
+    GaussianBlur(image,gauss,Size(3,3),5,0);
+    Laplacian(gauss,lapsPro,CV_16S,3,1,0);
+    convertScaleAbs(lapsPro,lapsPro);
+    imshow("LaplacianPro",lapsPro);
+
+    Canny(image,canny,80,160,3);
+    imshow("Canny",canny);
+
+    VideoCapture vd = VideoCapture(0);
+    Mat temp2_7,final2,gaussVideo,canny_video;
+    namedWindow("frame",WINDOW_FREERATIO);
+    namedWindow("frame2",WINDOW_FREERATIO);
+    namedWindow("frame_canny",WINDOW_FREERATIO);
+
+    createTrackbar("GaussKernel","frame2",&n2_7pro,100,onTrackGaussKernel2_7);
+    onTrackGaussKernel2_7(0,0);
+    createTrackbar("Laps_ksize","frame2",&ksize2_7,100,onTrackLapsKsize2_7);
+    onTrackLapsKsize2_7(0,0);
+
+    while(1){
+        vd >> temp2_7;
+
+        Laplacian(temp2_7,final2,CV_16S,1,1,0);
+        convertScaleAbs(final2,final2);
+        imshow("frame",final2);
+
+        GaussianBlur(temp2_7,gaussVideo,Size(kernel2_7Video,kernel2_7Video),5,0);
+        Laplacian(gaussVideo,final2,CV_16S,1,1,0);
+        convertScaleAbs(final2,final2);
+        imshow("frame2",final2);
+
+        Canny(temp2_7,canny_video,ksize2_7,160,3);
+        imshow("frame_canny",canny_video);
+           
+        waitKey(27);
+    }
+    
+}
+
+
+/*
+ROI & 掩膜
+#################################################################
+Range of interest
+两种截图方式
+
+Range(int start,  区间的起始
+      int end     区间的结束
+      )
+
+Rect(Tp_x, Tp_y, Tp_width, Tp_height);
+_Tp: 模板类型，C++模板特性，可以用double,int,float等替换
+_x: 左上角第一个像素横坐标，也就是列数
+_y: 左上角第一个像素纵坐标，也就是行数
+width:  宽度
+height: 高度
+*/
+void QuickDemo::func2_8_roi(Mat &image){
+    Mat roi1,roi2,
+        roi2_copy,
+        mask,
+        img,img_copy;
+
+    resize(input,mask,Size(200,300));
+    img = image;//浅拷贝
+    image.copyTo(img_copy);
+
+    Rect rect1(300,300,600,600);
+    roi1 = image(rect1);
+
+    mask.copyTo(roi1);
+
+    roi2 = image(Range(100,200),Range(300,400));
+    image(Range(100,200),Range(300,400)).copyTo(roi2_copy);
+
+    namedWindow("roi1",WINDOW_FREERATIO);
+    imshow("roi1",roi1);
+
+    namedWindow("img浅拷贝",WINDOW_FREERATIO);
+    imshow("img浅拷贝",img);
+
+    namedWindow("img深拷贝",WINDOW_FREERATIO);
+    imshow("img深拷贝",img_copy);
+
+    namedWindow("roi1对roi2的影响",WINDOW_FREERATIO);
+    imshow("roi1对roi2的影响",roi2);
+
+    namedWindow("深拷贝的roi2",WINDOW_FREERATIO);
+    imshow("深拷贝的roi2",roi2_copy);
+
+}
+/*
+掩膜 -- Mask
+进行逻辑操作的两个图像的大小一定要一样
+Mask一般都是8位通道
+*/
+int n2_8mask,
+    v2_8_1,
+    v2_8_2,
+    v2_8_3,
+    v2_8_4;
+void onTrack2_8Rectv1(int,void*){
+    v2_8_1 = v2_8_1;
+}
+void onTrack2_8Rectv2(int,void*){
+    v2_8_2 = v2_8_2;
+}
+void onTrack2_8Rectv3(int,void*){
+    v2_8_3 = v2_8_3;
+}
+void onTrack2_8Rectv4(int,void*){
+    v2_8_4 = v2_8_4;
+}
+void QuickDemo::func2_8_mask(Mat &image){
+    Mat mask;
+
+    namedWindow("img2",WINDOW_FREERATIO);
+    namedWindow("image",WINDOW_FREERATIO);
+//  createTrackbar("setTo_value","img2",&n2_8mask,255,onTrack2_8valueSt);
+//  onTrack2_8valueSt(0,0);
+    imshow("image",image);
+//#################################################################
+//❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
+//容易崩溃，滑动条的时候小心一点
+    createTrackbar("Point1_X","img2",&v2_8_1,image.cols,onTrack2_8Rectv1);
+    onTrack2_8Rectv1(0,0);
+    createTrackbar("Point1_Y","img2",&v2_8_2,image.rows,onTrack2_8Rectv2);
+    onTrack2_8Rectv2(0,0);
+    createTrackbar("Point2_X","img2",&v2_8_3,image.cols,onTrack2_8Rectv3);
+    onTrack2_8Rectv3(0,0);
+    createTrackbar("Point2_Y","img2",&v2_8_4,image.rows,onTrack2_8Rectv4);
+    onTrack2_8Rectv4(0,0);
+//❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
+//#################################################################
+
+    while(1){
+    //  掩膜区域
+        Rect r1(v2_8_1,v2_8_2,v2_8_3,v2_8_4);
+        mask = Mat::zeros(image.size(),CV_8UC1);//必须是8位
+        mask(r1).setTo(255);
+    //  原图image与掩膜区域计算后得到的结果图
+        Mat img2;
+        image.copyTo(img2,mask);
+        imshow("img2",img2);
+        waitKey(1);
+    }
+
+    waitKey(0);
 }
