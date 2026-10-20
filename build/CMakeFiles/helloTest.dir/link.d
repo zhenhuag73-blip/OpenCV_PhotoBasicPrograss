@@ -52,11 +52,13 @@ helloTest: \
   /usr/lib/x86_64-linux-gnu/libcairo.so.2 \
   /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0 \
   /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 \
+  /usr/local/lib/libopencv_features.so.5.0.0 \
+  /usr/local/lib/libopencv_dnn.so.5.0.0 \
+  /usr/local/lib/libopencv_flann.so.5.0.0 \
+  /usr/lib/x86_64-linux-gnu/libm.so.6 \
   /usr/lib/x86_64-linux-gnu/libpng16.so.16 \
   /usr/lib/x86_64-linux-gnu/libz.so.1 \
-  /usr/lib/x86_64-linux-gnu/libm.so.6 \
   /lib64/ld-linux-x86-64.so.2 \
-  /usr/local/lib/libopencv_flann.so.5.0.0 \
   /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0 \
   /usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so.0 \
   /usr/lib/x86_64-linux-gnu/libX11.so.6 \
@@ -206,15 +208,19 @@ CMakeFiles/helloTest.dir/source/main.cpp.o:
 
 /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0:
 
+/usr/local/lib/libopencv_features.so.5.0.0:
+
+/usr/local/lib/libopencv_dnn.so.5.0.0:
+
+/usr/local/lib/libopencv_flann.so.5.0.0:
+
+/usr/lib/x86_64-linux-gnu/libm.so.6:
+
 /usr/lib/x86_64-linux-gnu/libpng16.so.16:
 
 /usr/lib/x86_64-linux-gnu/libz.so.1:
 
-/usr/lib/x86_64-linux-gnu/libm.so.6:
-
 /lib64/ld-linux-x86-64.so.2:
-
-/usr/local/lib/libopencv_flann.so.5.0.0:
 
 /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0:
 

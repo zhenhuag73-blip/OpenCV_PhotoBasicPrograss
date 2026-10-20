@@ -10,7 +10,7 @@ void onTrack(int,void*){
 //################################################################
 
 int main(int argc,char **argv){
-    Mat image = imread("/home/branc/Desktop/C++OpenCV/Input/4.jpg",IMREAD_UNCHANGED);
+    Mat image = imread("/home/branc/Desktop/C++OpenCV/Input/QR_Code.jpg",IMREAD_UNCHANGED);
     if(image.empty()){
         cout << "ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR " << endl;
         return -1;
@@ -26,9 +26,23 @@ int main(int argc,char **argv){
 
     QuickDemo qd;
 //  qd.func2_8_roi(image);
-    qd.func2_8_mask(image);
-
+    qd.func2_9_QR(image);
+/*
+    VideoCapture cap(2);
+    if(!cap.isOpened()){
+        cout<<"Failed to load video..."<<endl;
+        return -2;
+    }
+    Mat Main_frame;
+    namedWindow("MainVideoStream",WINDOW_FREERATIO);
+    while(1){
+        cap >> Main_frame;
+        imshow("MainVideoStream",Main_frame);
+        waitKey(1);
+    }
     
     waitKey(0);
     destroyAllWindows();
+*/
+     return 0;
 }

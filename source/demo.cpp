@@ -528,7 +528,7 @@ void QuickDemo::func2_6_toClose(Mat &image){
 //🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️ 🖐️️😭🖐️️
 //#################################################################
     
-    VideoCapture vd = VideoCapture(0);
+    VideoCapture vd = VideoCapture(2);
     Mat frame, canny_video;
     namedWindow("VideoStream",WINDOW_FREERATIO);
     namedWindow("VideoStream1",WINDOW_FREERATIO);
@@ -666,7 +666,7 @@ void QuickDemo::func2_7_Pro(Mat &image){
     Canny(image,canny,80,160,3);
     imshow("Canny",canny);
 
-    VideoCapture vd = VideoCapture(0);
+    VideoCapture vd = VideoCapture(2);
     Mat temp2_7,final2,gaussVideo,canny_video;
     namedWindow("frame",WINDOW_FREERATIO);
     namedWindow("frame2",WINDOW_FREERATIO);
@@ -776,11 +776,10 @@ void QuickDemo::func2_8_mask(Mat &image){
 
     namedWindow("img2",WINDOW_FREERATIO);
     namedWindow("image",WINDOW_FREERATIO);
-//  createTrackbar("setTo_value","img2",&n2_8mask,255,onTrack2_8valueSt);
-//  onTrack2_8valueSt(0,0);
+    
     imshow("image",image);
 //#################################################################
-//❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
+//❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
 //容易崩溃，滑动条的时候小心一点
     createTrackbar("Point1_X","img2",&v2_8_1,image.cols,onTrack2_8Rectv1);
     onTrack2_8Rectv1(0,0);
@@ -790,7 +789,7 @@ void QuickDemo::func2_8_mask(Mat &image){
     onTrack2_8Rectv3(0,0);
     createTrackbar("Point2_Y","img2",&v2_8_4,image.rows,onTrack2_8Rectv4);
     onTrack2_8Rectv4(0,0);
-//❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
+//❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
 //#################################################################
 
     while(1){
@@ -805,5 +804,52 @@ void QuickDemo::func2_8_mask(Mat &image){
         waitKey(1);
     }
 
+    waitKey(0);
+}
+/*
+#################################################################
+二维码识别SCAN QR Code
+Detect
+    bool cv::QRCodeDetector::detect(img, points)
+Decode
+    string cv::QRCodeDetector::decode(img,
+                                      points,
+                                      straight_qrcode = noArrary()
+    )
+
+#################################################################
+*/
+void QuickDemo::func2_9_QR(Mat &QR_Code){
+    Mat QR_gray,
+        QR_binary;
+
+    cvtColor(QR_Code,QR_gray,COLOR_BGR2GRAY);
+
+    vector<Point> points;
+    bool isQRcode;
+    string Info;
+
+    QRCodeDetector QRScan;
+    isQRcode = QRScan.detect(QR_gray,points);
+
+    if(isQRcode){
+        Info = QRScan.decode(QR_gray,points,QR_binary);
+        cout << points << endl;//输出四个顶点坐标
+    }
+
+    else{
+        cout<<"不对不对不对"<<endl;
+        throw invalid_argument("Error QR_Code");
+    }
+
+//  绘制二维码边框
+    for(int i = 0;i < points.size();++i){
+        Point p1 = points[i];
+        Point p2 = points[(i + 1) % points.size()];  // 取模，最后一点连回第 0 点
+        line(QR_Code, p1, p2, Scalar(0, 0, 255), 2, 8);
+    }
+    putText(QR_Code,Info.c_str(),Point(20,30),0,1.0,Scalar(255,25,90),2,8);
+    namedWindow("QRScan",WINDOW_FREERATIO);
+    imshow("QRScan",QR_Code);
     waitKey(0);
 }

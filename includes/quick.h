@@ -26,4 +26,6 @@ public:
 //ROI与掩膜
     void func2_8_roi(Mat &image);
     void func2_8_mask(Mat &image);
+//二维码识别SCAN QR Code
+    void func2_9_QR(Mat &QR_Code);
 };
