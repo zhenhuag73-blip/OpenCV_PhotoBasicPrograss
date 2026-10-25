@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/g++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/branc/Desktop/C++OpenCV/./source -I/home/branc/Desktop/C++OpenCV/./includes -isystem /usr/local/include/opencv5
+CXX_INCLUDES = -I/home/branc/Desktop/C++OpenCV/./source -I/home/branc/Desktop/C++OpenCV/./includes -isystem /usr/include/opencv4
 
 CXX_FLAGS = -g
 

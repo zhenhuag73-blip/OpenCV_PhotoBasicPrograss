@@ -1,5 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/helloTest.dir/link.d"
+  "CMakeFiles/helloTest.dir/source/complex.cpp.o"
+  "CMakeFiles/helloTest.dir/source/complex.cpp.o.d"
   "CMakeFiles/helloTest.dir/source/demo.cpp.o"
   "CMakeFiles/helloTest.dir/source/demo.cpp.o.d"
   "CMakeFiles/helloTest.dir/source/main.cpp.o"

@@ -1,14 +1,20 @@
 [
 {
   "directory": "/home/branc/Desktop/C++OpenCV/build",
-  "command": "/usr/bin/g++  -I/home/branc/Desktop/C++OpenCV/./source -I/home/branc/Desktop/C++OpenCV/./includes -isystem /usr/local/include/opencv5 -g -o CMakeFiles/helloTest.dir/source/demo.cpp.o -c /home/branc/Desktop/C++OpenCV/source/demo.cpp",
+  "command": "/usr/bin/g++  -I/home/branc/Desktop/C++OpenCV/./source -I/home/branc/Desktop/C++OpenCV/./includes -isystem /usr/include/opencv4 -g -o CMakeFiles/helloTest.dir/source/demo.cpp.o -c /home/branc/Desktop/C++OpenCV/source/demo.cpp",
   "file": "/home/branc/Desktop/C++OpenCV/source/demo.cpp",
   "output": "CMakeFiles/helloTest.dir/source/demo.cpp.o"
 },
 {
   "directory": "/home/branc/Desktop/C++OpenCV/build",
-  "command": "/usr/bin/g++  -I/home/branc/Desktop/C++OpenCV/./source -I/home/branc/Desktop/C++OpenCV/./includes -isystem /usr/local/include/opencv5 -g -o CMakeFiles/helloTest.dir/source/main.cpp.o -c /home/branc/Desktop/C++OpenCV/source/main.cpp",
+  "command": "/usr/bin/g++  -I/home/branc/Desktop/C++OpenCV/./source -I/home/branc/Desktop/C++OpenCV/./includes -isystem /usr/include/opencv4 -g -o CMakeFiles/helloTest.dir/source/main.cpp.o -c /home/branc/Desktop/C++OpenCV/source/main.cpp",
   "file": "/home/branc/Desktop/C++OpenCV/source/main.cpp",
   "output": "CMakeFiles/helloTest.dir/source/main.cpp.o"
+},
+{
+  "directory": "/home/branc/Desktop/C++OpenCV/build",
+  "command": "/usr/bin/g++  -I/home/branc/Desktop/C++OpenCV/./source -I/home/branc/Desktop/C++OpenCV/./includes -isystem /usr/include/opencv4 -g -o CMakeFiles/helloTest.dir/source/complex.cpp.o -c /home/branc/Desktop/C++OpenCV/source/complex.cpp",
+  "file": "/home/branc/Desktop/C++OpenCV/source/complex.cpp",
+  "output": "CMakeFiles/helloTest.dir/source/complex.cpp.o"
 }
 ]

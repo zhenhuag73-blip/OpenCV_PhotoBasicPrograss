@@ -1517,3 +1517,105 @@ events:
         - "/usr/pkg"
         - "/opt"
 ...
+
+---
+events:
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "CMakeLists.txt:5 (find_package)"
+    name: "OpenCV"
+    configs:
+      -
+        filename: "OpenCVConfig.cmake"
+        kind: "cmake"
+      -
+        filename: "opencv-config.cmake"
+        kind: "cmake"
+    version_request:
+      version: "4"
+      version_complete: "4"
+      exact: false
+    settings:
+      required: "required_explicit"
+      quiet: false
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "OpenCV"
+      search_paths:
+        - "/usr/lib/x86_64-linux-gnu/cmake/opencv4"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: false
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "/usr/local/lib/cmake/opencv5/OpenCVConfig.cmake"
+        mode: "none?"
+        reason: "insufficient_version"
+        message: "The version found is not compatible with the version requested."
+      -
+        path: "/usr/local/lib/cmake/opencv5/opencv-config.cmake"
+        mode: "none?"
+        reason: "no_exist"
+      -
+        path: "/home/branc/Desktop/C++OpenCV/build/CMakeFiles/pkgRedirects/OpenCVConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/home/branc/Desktop/C++OpenCV/build/CMakeFiles/pkgRedirects/opencv-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found:
+      path: "/usr/lib/x86_64-linux-gnu/cmake/opencv4/OpenCVConfig.cmake"
+      mode: "config"
+      version: "4.10.0"
+    search_context:
+      ENV{CMAKE_PREFIX_PATH}:
+        - "/opt/ros/lyrical/opt/gz_math_vendor"
+        - "/opt/ros/lyrical/opt/gz_utils_vendor"
+        - "/opt/ros/lyrical/opt/gz_cmake_vendor"
+      ENV{PATH}:
+        - "/home/branc/.local/bin"
+        - "/home/branc/.codex/tmp/arg0-linux/codex-arg0fTlIyq"
+        - "/home/branc/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override"
+        - "/home/branc/.local/bin"
+        - "/opt/ros/lyrical/bin"
+        - "/home/branc/.local/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/snap/bin"
+        - "/snap/bin"
+        - "/home/branc/.local/bin"
+        - "/home/branc/.local/bin"
+        - "/home/branc/.local/bin"
+        - "/home/branc/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback"
+        - "/usr/lib/chatgpt/resources"
+        - "/home/branc/.local/bin"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+...

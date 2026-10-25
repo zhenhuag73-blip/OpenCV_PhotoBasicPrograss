@@ -1,6 +1,5 @@
 #include"quick.h"
 #include<opencv2/opencv.hpp>
-#include <opencv2/geometry.hpp>
 #include<iostream>
 #include<vector>
 
@@ -8,7 +7,59 @@ using namespace std;
 using namespace cv;
 
 Mat input = imread("/home/branc/Desktop/C++OpenCV/Input/object.jpg",IMREAD_UNCHANGED);
+/*
+视频写入
+VideoWriter(const String & filename, 保存视频的 路径/视频名/格式
+            int fourcc,              压缩帧的4字编解码代码
+            double fps,              保存视频的帧率
+            Size FrameSize,          视频的尺寸
+            bool isColor = true      保存视频是否为彩色视频
+            )
+*/
+void QuickDemo::VdWrite(){
+    VideoCapture VdWrite_vd("/home/branc/Desktop/C++OpenCV/Input/test.mp4"/*, CAP_FFMPEG*/);
+    Mat VdWrite_frame;
 
+    int width,height;
+    width = (VdWrite_vd.get(CAP_PROP_FRAME_WIDTH));
+    height = (VdWrite_vd.get(CAP_PROP_FRAME_HEIGHT));
+
+    if(!VdWrite_vd.isOpened()){
+        cout << "There is a loading failure..." << endl;
+        return;
+    }
+
+    namedWindow("Video_Writer",WINDOW_FREERATIO);
+    VideoWriter vd_writer;
+    
+    cout << "Video_fps: " << VdWrite_vd.get(CAP_PROP_FPS) << endl;
+
+    VideoWriter writer;
+//               选择编解码形式         H.264兼容性更好，HEVC效率更佳
+    int ecodec = VideoWriter::fourcc('a','v','c','1');
+    string file_name = "/home/branc/Desktop/C++OpenCV/output/new.mp4";
+
+    double fps = 25.00;
+    bool isColor = true;
+    writer.open(file_name,ecodec,fps,Size(width,height),isColor);
+
+    while(1){
+        VdWrite_vd >> VdWrite_frame;
+        if(VdWrite_frame.empty()){
+            cout << "There is a loading failure for your Video" << endl;
+            cout << "Please Try again after detecting ......(T ^ T)" << endl;
+            break;
+        }
+        imshow("Video_Writer",VdWrite_frame);
+        writer.write(VdWrite_frame);
+
+        uchar c = waitKey(1000 / fps);
+        if(c == 'q'){
+            break;
+        }
+    }
+    writer.release();
+}
 
 /*
 #################################################################
@@ -168,7 +219,6 @@ void QuickDemo::func2_5_erode(){
         imshow("Frame_erode",frame);
         waitKey(27);
     }
-
     destroyAllWindows();
 
 }
@@ -293,7 +343,7 @@ void QuickDemo::func2_5_Pro(){
 
     namedWindow("Original_Picture",WINDOW_NORMAL);
     imshow("Original_Picture",input);
-
+//  回调函数集合
     createTrackbar("Option","Public",&value2_5_Option,6,onTrackOption);
     createTrackbar("Value_ON_Picture","Picture",&n2_5_ProPicture,112,Kernel2_5_ProPicture);
     createTrackbar("Value_ON_Video","Video",&n2_5_ProVideo,112,Kernel2_5_ProVideo);
@@ -620,6 +670,7 @@ void QuickDemo::func2_7(Mat &image){
 堆屎山ing... 💩
 Laplacian算子
 Sobel & Scharr算法都是对X,Y单一方向计算梯度
+
 Laplacian算子可以忽略方向性,缺点容易受噪声影响
 Laplacian(input,output,
           ddepth,
@@ -627,6 +678,7 @@ Laplacian(input,output,
           double scale = 1,
           double delta = 0,
           borderType = DEFAULT);
+
 Canny算法
 Canny算法是对Sobel算法优化的算法，能够去除掉一些虚假的边缘
 Canny(input,
@@ -696,7 +748,6 @@ void QuickDemo::func2_7_Pro(Mat &image){
     }
     
 }
-
 
 /*
 ROI & 掩膜
@@ -780,13 +831,16 @@ void QuickDemo::func2_8_mask(Mat &image){
     imshow("image",image);
 //#################################################################
 //❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
-//容易崩溃，滑动条的时候小心一点
+//懒得调了，容易崩溃，滑动条的时候小心一点
     createTrackbar("Point1_X","img2",&v2_8_1,image.cols,onTrack2_8Rectv1);
     onTrack2_8Rectv1(0,0);
+
     createTrackbar("Point1_Y","img2",&v2_8_2,image.rows,onTrack2_8Rectv2);
     onTrack2_8Rectv2(0,0);
+
     createTrackbar("Point2_X","img2",&v2_8_3,image.cols,onTrack2_8Rectv3);
     onTrack2_8Rectv3(0,0);
+    
     createTrackbar("Point2_Y","img2",&v2_8_4,image.rows,onTrack2_8Rectv4);
     onTrack2_8Rectv4(0,0);
 //❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
@@ -850,6 +904,8 @@ void QuickDemo::func2_9_QR(Mat &QR_Code){
     }
     putText(QR_Code,Info.c_str(),Point(20,30),0,1.0,Scalar(255,25,90),2,8);
     namedWindow("QRScan",WINDOW_FREERATIO);
+    cout<<Info<<endl;
     imshow("QRScan",QR_Code);
+    imwrite("/home/branc/Desktop/C++OpenCV/output/QRrst.jpg",QR_Code);
     waitKey(0);
 }

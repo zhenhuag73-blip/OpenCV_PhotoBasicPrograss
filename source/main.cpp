@@ -15,7 +15,7 @@ int main(int argc,char **argv){
         cout << "ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR " << endl;
         return -1;
     }
-    cout<<"----------BASIC INFORMATION----------" << endl;
+    cout<<"========================= BASIC INFORMATION =========================" << endl;
     cout<<"image: " << "type: " << image.type() << endl;
     cout<<"       " << "长cols: " << image.cols << endl;
     cout<<"       " << "宽rows: " << image.rows << endl;
@@ -23,12 +23,13 @@ int main(int argc,char **argv){
     cout<<"       " << "eleSize: " << image.elemSize() << " 字节  (每个像素占的字节数)" << endl;
     cout<<"       " << "eleSize1: " << image.elemSize1() << "字节  (每个通道占的字节数)" << endl;
     cout<<"       " << "是否连续: " << (image.isContinuous() ? "Yes" : "No" ) << endl;
+    cout<<"========================= BASIC INFORMATION =========================" << endl;
 
     QuickDemo qd;
 //  qd.func2_8_roi(image);
-    qd.func2_9_QR(image);
+    qd.VdWrite();
 /*
-    VideoCapture cap(2);
+    VideoCapture cap(0);
     if(!cap.isOpened()){
         cout<<"Failed to load video..."<<endl;
         return -2;
@@ -43,6 +44,7 @@ int main(int argc,char **argv){
     
     waitKey(0);
     destroyAllWindows();
+    return 0;
 */
-     return 0;
+
 }

@@ -129,6 +129,30 @@ helloTest/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/helloTest.dir/build.make CMakeFiles/helloTest.dir/build
 .PHONY : helloTest/fast
 
+source/complex.o: source/complex.cpp.o
+.PHONY : source/complex.o
+
+# target to build an object file
+source/complex.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/helloTest.dir/build.make CMakeFiles/helloTest.dir/source/complex.cpp.o
+.PHONY : source/complex.cpp.o
+
+source/complex.i: source/complex.cpp.i
+.PHONY : source/complex.i
+
+# target to preprocess a source file
+source/complex.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/helloTest.dir/build.make CMakeFiles/helloTest.dir/source/complex.cpp.i
+.PHONY : source/complex.cpp.i
+
+source/complex.s: source/complex.cpp.s
+.PHONY : source/complex.s
+
+# target to generate assembly for a file
+source/complex.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/helloTest.dir/build.make CMakeFiles/helloTest.dir/source/complex.cpp.s
+.PHONY : source/complex.cpp.s
+
 source/demo.o: source/demo.cpp.o
 .PHONY : source/demo.o
 
@@ -186,6 +210,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... helloTest"
+	@echo "... source/complex.o"
+	@echo "... source/complex.i"
+	@echo "... source/complex.s"
 	@echo "... source/demo.o"
 	@echo "... source/demo.i"
 	@echo "... source/demo.s"
